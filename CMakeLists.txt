@@ -7,3 +7,6 @@ add_executable(Chip8Emulator src/main.cpp)
 
 find_package(glfw3 3.3 REQUIRED)
 target_link_libraries(Chip8Emulator glfw)
+
+find_package(GLEW REQUIRED)
+target_link_libraries(Chip8Emulator GLEW::glew)
