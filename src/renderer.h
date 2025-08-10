@@ -17,14 +17,15 @@ private:
     unsigned int VAO; // Going to use a single VAO here, don't expect the need for multiple atm
     unsigned int EBO;
     unsigned int program;
+    unsigned int texture;
     GLFWwindow *window;
 
     // Draw a quad covering the whole screen
-    float vertices[12] = {
-        1.0f, 1.0f, 0.0f,   // top right
-        1.0f, -1.0f, 0.0f,  // bottom right
-        -1.0f, -1.0f, 0.0f, // bottom left
-        -1.0f, 1.0f, 0.0f   // top left
+    float vertices[32] = { // Position 3 floats - Color 3 FLoats - Texture 2 Floats
+        1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
+        1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom right
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+        -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f   // top left
     };
     unsigned int indices[6] = {
         0, 1, 2, // first triangle
@@ -37,6 +38,7 @@ private:
         1.0f, 1.0f};
 
     void processInput(GLFWwindow *window);
+    int readShaderFromFile(std::string &shader, std::string shaderFileName);
 
     // Honestly not worth reading these in from a separate file, minimal shaders is all that will ever be needed for this project
     const char *vertexShaderSource = "#version 330 core\n"
