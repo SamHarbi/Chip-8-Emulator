@@ -14,7 +14,7 @@ public:
 
 private:
     unsigned int VBO;
-    unsigned int VAO;
+    unsigned int VAO; // Going to use a single VAO here, don't expect the need for multiple atm
     unsigned int EBO;
     unsigned int program;
     GLFWwindow *window;
