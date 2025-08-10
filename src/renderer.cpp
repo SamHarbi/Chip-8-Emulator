@@ -1,17 +1,22 @@
 #include <iostream>
 #include <string>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../include/stb_image.h"
+
 #include "renderer.h"
 
-Renderer::Renderer(){}
+Renderer::Renderer() {}
 
-int Renderer::init(void) {
+int Renderer::init(void)
+{
     /*
         Setup Window (GLFW)
     */
 
     /* Initialize the library */
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         std::cout << "Couldn't init GLFW" << std::endl;
         return -1;
     }
@@ -22,7 +27,8 @@ int Renderer::init(void) {
 
     /* Create a windowed mode window and its OpenGL context */
     Renderer::window = glfwCreateWindow(640, 320, "Chip8", NULL, NULL);
-    if (!Renderer::window) {
+    if (!Renderer::window)
+    {
         std::cout << "Couldn't create window" << std::endl;
         glfwTerminate();
         return -1;
@@ -34,7 +40,8 @@ int Renderer::init(void) {
     glfwMakeContextCurrent(Renderer::window);
 
     GLenum err = glewInit();
-    if (GLEW_OK != err) {
+    if (GLEW_OK != err)
+    {
         /* Problem: glewInit failed, something is seriously wrong. */
         fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
     }
@@ -63,6 +70,12 @@ int Renderer::init(void) {
     glDeleteShader(fragmentShader);
 
     /*
+        Load in texture data
+    */
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+
+    /*
         Setup OpenGL Buffers and more
     */
 
@@ -73,18 +86,34 @@ int Renderer::init(void) {
     // Vertex Buffer VBO
     glGenBuffers(1, &(Renderer::VBO));
     glBindBuffer(GL_ARRAY_BUFFER, (Renderer::VBO));
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Renderer::screen_verts), Renderer::screen_verts, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Renderer::vertices), Renderer::vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &(Renderer::EBO));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (Renderer::EBO));
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Renderer::indices), Renderer::indices, GL_STATIC_DRAW);
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(data);
 
     return 0;
 }
 
-void Renderer::processInput(GLFWwindow *local_window) {
+void Renderer::processInput(GLFWwindow *local_window)
+{
     if (glfwGetKey(local_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(local_window, true);
 }
 
-int Renderer::render() {
-    if (!glfwWindowShouldClose(Renderer::window)) {
+int Renderer::render()
+{
+    if (!glfwWindowShouldClose(Renderer::window))
+    {
         glUseProgram(program);
 
         processInput(Renderer::window);
@@ -99,14 +128,16 @@ int Renderer::render() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glPointSize(10);
-        glDrawArrays(GL_TRIANGLES, 0, ((sizeof(screen_verts) / sizeof(float)) / 3));
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Renderer::EBO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(Renderer::window);
         glfwPollEvents();
 
         return 0;
     }
-    else {
+    else
+    {
         glfwTerminate();
         return 1;
     }

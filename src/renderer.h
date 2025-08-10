@@ -2,9 +2,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class Renderer {
+class Renderer
+{
 public:
-    //Sized as per chip8 specification (Width x Height)
+    // Sized as per chip8 specification (Width x Height)
     bool screen[64][32];
 
     Renderer();
@@ -14,19 +15,26 @@ public:
 private:
     unsigned int VBO;
     unsigned int VAO;
+    unsigned int EBO;
     unsigned int program;
     GLFWwindow *window;
 
     // Draw a quad covering the whole screen
-    float screen_verts[18] = {
-        -1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
+    float vertices[12] = {
+        1.0f, 1.0f, 0.0f,   // top right
+        1.0f, -1.0f, 0.0f,  // bottom right
+        -1.0f, -1.0f, 0.0f, // bottom left
+        -1.0f, 1.0f, 0.0f   // top left
+    };
+    unsigned int indices[6] = {
+        0, 1, 2, // first triangle
+        0, 2, 3  // second triangle
     };
 
+    float texture_cords[6] = {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f};
 
     void processInput(GLFWwindow *window);
 
