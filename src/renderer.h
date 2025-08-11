@@ -2,8 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-class Renderer
-{
+class Renderer {
 public:
     // Sized as per chip8 specification (Width x Height)
     bool screen[64][32];
@@ -40,7 +39,7 @@ private:
     void processInput(GLFWwindow *window);
     int readShaderFromFile(std::string &shader, std::string shaderFileName);
 
-    // Honestly not worth reading these in from a separate file, minimal shaders is all that will ever be needed for this project
+    // Basic debug shaders in case we need em during dev
     const char *vertexShaderSource = "#version 330 core\n"
                                      "layout (location = 0) in vec3 aPos;\n"
                                      "void main()\n"

@@ -17,3 +17,6 @@ CMakeUserPresets.json
 
 # Name of compiled binary
 Chip8Emulator
+
+# Roms
+test/roms/
