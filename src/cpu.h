@@ -4,6 +4,8 @@
 #include <ctime>
 #include <iostream>
 #include <chrono>
+#include <algorithm>
+#include <array>
 
 class CPU {
     public:
@@ -16,7 +18,7 @@ class CPU {
         uint8_t delayTimer{};
         uint8_t soundTimer{};
         uint8_t keypad[16]{};
-        uint32_t video[64 * 32]{};
+        uint32_t screen[64 * 32]{};
         uint16_t opcode;
 
         const unsigned int START_ADDRESS = 0x200;

@@ -56,3 +56,7 @@ void CPU::cycle() {
 	}
 
 }
+
+void CPU::instruct_00E0() {
+    std::fill(std::begin(screen), std::end(screen), 0);
+}

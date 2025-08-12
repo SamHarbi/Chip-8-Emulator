@@ -5,7 +5,7 @@
 class Renderer {
 public:
     // Sized as per chip8 specification (Width x Height)
-    bool screen[64][32];
+    bool screen[64*32];
 
     Renderer();
     int init();
