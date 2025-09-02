@@ -24,9 +24,6 @@ class CPU {
         const unsigned int START_ADDRESS = 0x200;
         const unsigned int FONT_START_ADDRESS = 0x50;
 
-        const std::chrono::duration<double> clock_delay{0.1};
-        std::chrono::time_point<std::chrono::steady_clock> last_clock;
-
         uint8_t font[80] = {
             0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
             0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -49,12 +46,13 @@ class CPU {
         CPU();
         void loadROM(std::string filename);
         unsigned char randomVal();
-        void cycle();
+        std::chrono::time_point<std::chrono::steady_clock> cycle();
+        uint32_t* getDisplayData();
 
         void instruct_00E0();
-        void instruct_1NNN();
-        void instruct_6XNN();
-        void instruct_7XNN();
-        void instruct_ANNN();
-        void instruct_DXYN();
+        void instruct_1NNN(uint16_t opcode);
+        void instruct_6XNN(uint16_t opcode);
+        void instruct_7XNN(uint16_t opcode);
+        void instruct_ANNN(uint16_t opcode);
+        void instruct_DXYN(uint16_t opcode);
 };

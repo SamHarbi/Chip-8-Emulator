@@ -8,8 +8,10 @@ public:
     bool screen[64*32];
 
     Renderer();
+    ~Renderer();
     int init();
     int render();
+    void inputDisplayData(uint32_t *data);
 
 private:
     unsigned int VBO;

@@ -8,9 +8,23 @@ int main(void) {
     CPU* cpu = new CPU();
     Renderer* rend = new Renderer();
     int error = rend->init();
+
+    // Clock values to control speed of emulation
+    std::chrono::time_point<std::chrono::steady_clock> last_clock = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> currentTime = last_clock;
+    std::chrono::duration<float, std::chrono::milliseconds::period> dt = currentTime - last_clock;
+    const std::chrono::duration<double> clock_delay{0.1};
+
     if(error == 0) {
         do {
-            error = rend->render();
+            currentTime = std::chrono::steady_clock::now();
+		    dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - last_clock);
+		    if( dt > clock_delay ) {
+			    last_clock = cpu->cycle();
+                rend->inputDisplayData(cpu->getDisplayData());
+                error = rend->render();
+		    }
+            
         } while ( error == 0);
     }
 
