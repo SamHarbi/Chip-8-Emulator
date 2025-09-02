@@ -3,18 +3,17 @@
 CPU::CPU(){
     pc = START_ADDRESS;
 
-	for (unsigned int i = 0; i < 80; ++i)
-	{
+	for (unsigned int i = 0; i < 80; ++i) {
 		memory[FONT_START_ADDRESS + i] = font[i];
 	}
 
     srand(time(0));
 
-    loadROM("test/roms/IBM_Logo.ch8");
+    loadROM("test/roms/test_opcode.ch8");
 }
 
 unsigned char CPU::randomVal() {
-    return static_cast<unsigned char>(rand()); 
+    return static_cast<unsigned char>(rand());
 }
 
 void CPU::loadROM(std::string filename) {
@@ -30,8 +29,7 @@ void CPU::loadROM(std::string filename) {
 		file.read(buffer, size);
 		file.close();
 
-		for (long i = 0; i < size; ++i)
-		{
+		for (long i = 0; i < size; ++i) {
 			memory[START_ADDRESS + i] = buffer[i];
 		}
 
@@ -59,6 +57,22 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	else if (opcode >> 12u == 0x1) {
 		std::cout << "1NNN (jump)" << std::endl;
 		instruct_1NNN(opcode);
+	}
+	else if (opcode >> 12u == 0x3) {
+		std::cout << "3XNN (Skip conditionally)" << std::endl;
+		instruct_3XNN(opcode);
+	}
+	else if (opcode >> 12u == 0x4) {
+		std::cout << "4XNN (Skip conditionally)" << std::endl;
+		instruct_4XNN(opcode);
+	}
+	else if (opcode >> 12u == 0x4) {
+		std::cout << "5XY0 (Skip conditionally)" << std::endl;
+		instruct_5XY0(opcode);
+	}
+	else if (opcode >> 12u == 0x4) {
+		std::cout << "9XY0 (Skip conditionally)" << std::endl;
+		instruct_9XY0(opcode);
 	}
 	else if (opcode >> 12u == 0x6) {
 		std::cout << "6XNN (set register VX)" << std::endl;
@@ -88,6 +102,42 @@ void CPU::instruct_00E0() {
 
 void CPU::instruct_1NNN(uint16_t opcode) {
 	pc = opcode & 0x0FFFu;
+}
+
+void CPU::instruct_3XNN(uint16_t opcode) {
+	uint8_t reg = ((opcode) >> 8u) & 0x0Fu;
+	uint8_t val = opcode & 0x00FFu;
+
+	if(registers[reg] == val) {
+		pc+=2;
+	}
+}
+
+void CPU::instruct_4XNN(uint16_t opcode) {
+	uint8_t reg = ((opcode) >> 8u) & 0x0Fu;
+	uint8_t val = opcode & 0x00FFu;
+
+	if(registers[reg] != val) {
+		pc+=2;
+	}
+}
+
+void CPU::instruct_5XY0(uint16_t opcode) {
+	uint8_t regx = (opcode >> 8u) & 0x0Fu;
+	uint8_t regy = (opcode >> 4u) & 0x00Fu;
+
+	if(registers[regx] == registers[regy]) {
+		pc+=2;
+	}
+}
+
+void CPU::instruct_9XY0(uint16_t opcode) {
+	uint8_t regx = (opcode >> 8u) & 0x0Fu;
+	uint8_t regy = (opcode >> 4u) & 0x00Fu;
+
+	if(registers[regx] != registers[regy]) {
+		pc+=2;
+	}
 }
 
 void CPU::instruct_6XNN(uint16_t opcode) {

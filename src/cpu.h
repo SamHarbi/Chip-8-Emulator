@@ -55,4 +55,8 @@ class CPU {
         void instruct_7XNN(uint16_t opcode);
         void instruct_ANNN(uint16_t opcode);
         void instruct_DXYN(uint16_t opcode);
+        void instruct_3XNN(uint16_t opcode);
+        void instruct_4XNN(uint16_t opcode);
+        void instruct_5XY0(uint16_t opcode);
+        void instruct_9XY0(uint16_t opcode);
 };
