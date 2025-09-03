@@ -9,10 +9,10 @@ CPU::CPU(){
 
     srand(time(0));
 
-    loadROM("test/roms/test_opcode.ch8");
+    loadROM("test/roms/octojam3title.ch8");
 }
 
-unsigned char CPU::randomVal() {
+unsigned char CPU::pseudoRandomVal() {
     return static_cast<unsigned char>(rand());
 }
 
@@ -86,16 +86,24 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 		std::cout << "7XNN (add value to register VX)" << std::endl;
 		instruct_7XNN(opcode);
 	}
+	else if (opcode >> 12u == 0x8) {
+		std::cout << "0x8 | Series Instructions" << std::endl;
+		instruct_8(opcode);
+	}
 	else if (opcode >> 12u == 0xA) {
 		std::cout << "ANNN (set index register I)" << std::endl;
 		instruct_ANNN(opcode);
+	}
+	else if (opcode >> 12u == 0xA) {
+		std::cout << "CXNN (random)" << std::endl;
+		instruct_CXNN(opcode);
 	}
 	else if (opcode >> 12u == 0xD) {
 		std::cout << "DXYN (display/draw)" << std::endl;
 		instruct_DXYN(opcode);
 	}
 	else {
-		//printf("Unknown opcode: %d", opcode);
+		printf("Unknown opcode: %d \n", opcode);
 	}
 	return std::chrono::steady_clock::now();
 }
@@ -159,6 +167,84 @@ void CPU::instruct_7XNN(uint16_t opcode) {
 	registers[reg] += value;
 }
 
+void CPU::instruct_8(uint16_t opcode) {
+	uint8_t lastNibble = opcode & 0x000Fu;
+	if (lastNibble == 0) {
+		std::cout << "0x8 | 0 Set" << std::endl;
+		instruct_8XY0(opcode);
+	}
+	else if (lastNibble == 1) {
+		std::cout << "0x8 | 1 Binary OR" << std::endl;
+		instruct_8XY1(opcode);
+	}
+	else if (lastNibble == 2) {
+		std::cout << "0x8 | 2 Binary AND" << std::endl;
+		instruct_8XY2(opcode);
+	}
+	else if (lastNibble == 3) {
+		std::cout << "0x8 | 3 Logical XOR" << std::endl;
+		instruct_8XY3(opcode);
+	}
+	else if (lastNibble == 4) {
+		std::cout << "0x8 | 4 Add" << std::endl;
+		instruct_8XY4(opcode);
+	}
+	else if (lastNibble == 5) {
+		std::cout << "0x8 | 5 Subtract VX" << std::endl;
+	}
+	else if (lastNibble == 6) {
+		std::cout << "0x8 | 6 Shift" << std::endl;
+	}
+	else if (lastNibble == 7) {
+		std::cout << "0x8 | 7 Subtract VY" << std::endl;
+	}
+}
+
+void CPU::instruct_8XY0(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	registers[vx] = registers[vy];
+}
+
+void CPU::instruct_8XY1(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	registers[vx] = registers[vx] | registers[vy];
+}
+
+void CPU::instruct_8XY2(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	registers[vx] = registers[vx] & registers[vy];
+}
+
+void CPU::instruct_8XY3(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	registers[vx] = registers[vx] ^ registers[vy];
+}
+
+void CPU::instruct_8XY4(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	if( registers[vx] > (255 - registers[vy]) ) {
+		registers[15] = 1;
+	} else {
+		registers[15] = 0;
+	}
+
+	registers[vx] = registers[vx] + registers[vy];
+}
+
+void CPU::instruct_8XY6(uint16_t opcode) {
+	// TODO, two common differing behaviors
+}
+
 void CPU::instruct_9XY0(uint16_t opcode) {
 	uint8_t regx = (opcode >> 8u) & 0x0Fu;
 	uint8_t regy = (opcode >> 4u) & 0x00Fu;
@@ -170,6 +256,17 @@ void CPU::instruct_9XY0(uint16_t opcode) {
 
 void CPU::instruct_ANNN(uint16_t opcode) {
 	index = opcode & 0x0FFF;
+}
+
+void CPU::instruct_BNNN(uint16_t opcode) {
+	// TODO, two common differing behaviors
+}
+
+void CPU::instruct_CXNN(uint16_t opcode) {
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t byte = opcode & 0x00FFu;
+
+	registers[Vx] = pseudoRandomVal() & byte;
 }
 
 void CPU::instruct_DXYN(uint16_t opcode) {

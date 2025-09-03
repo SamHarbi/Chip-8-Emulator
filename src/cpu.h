@@ -44,7 +44,7 @@ class CPU {
 
         CPU();
         void loadROM(std::string filename);
-        unsigned char randomVal();
+        unsigned char pseudoRandomVal();
         std::chrono::time_point<std::chrono::steady_clock> cycle();
         uint32_t* getDisplayData();
 
@@ -60,4 +60,16 @@ class CPU {
         void instruct_4XNN(uint16_t opcode);
         void instruct_5XY0(uint16_t opcode);
         void instruct_9XY0(uint16_t opcode);
+
+        void instruct_8(uint16_t opcode);
+        void instruct_8XY0(uint16_t opcode);
+        void instruct_8XY1(uint16_t opcode);
+        void instruct_8XY2(uint16_t opcode);
+        void instruct_8XY3(uint16_t opcode);
+        void instruct_8XY4(uint16_t opcode);
+        void instruct_8XY6(uint16_t opcode);
+
+        void instruct_BNNN(uint16_t opcode);
+        void instruct_CXNN(uint16_t opcode);
+
 };

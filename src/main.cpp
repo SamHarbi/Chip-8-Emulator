@@ -13,7 +13,7 @@ int main(void) {
     std::chrono::time_point<std::chrono::steady_clock> last_clock = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> currentTime = last_clock;
     std::chrono::duration<float, std::chrono::milliseconds::period> dt = currentTime - last_clock;
-    const std::chrono::duration<double> clock_delay{0.1};
+    const std::chrono::duration<double> clock_delay{0.0};
 
     if(error == 0) {
         do {
