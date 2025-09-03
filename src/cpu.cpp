@@ -58,6 +58,10 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 		std::cout << "1NNN (jump)" << std::endl;
 		instruct_1NNN(opcode);
 	}
+	else if (opcode >> 12u == 0x2) {
+		std::cout << "2NNN (jump)" << std::endl;
+		instruct_2NNN(opcode);
+	}
 	else if (opcode >> 12u == 0x3) {
 		std::cout << "3XNN (Skip conditionally)" << std::endl;
 		instruct_3XNN(opcode);
@@ -100,7 +104,17 @@ void CPU::instruct_00E0() {
     std::fill(std::begin(screen), std::end(screen), 0);
 }
 
+void CPU::instruct_00EE(uint16_t opcode) {
+	pc = stack.top();
+	stack.pop();
+}
+
 void CPU::instruct_1NNN(uint16_t opcode) {
+	pc = opcode & 0x0FFFu;
+}
+
+void CPU::instruct_2NNN(uint16_t opcode) {
+	stack.push(pc);
 	pc = opcode & 0x0FFFu;
 }
 
@@ -131,15 +145,6 @@ void CPU::instruct_5XY0(uint16_t opcode) {
 	}
 }
 
-void CPU::instruct_9XY0(uint16_t opcode) {
-	uint8_t regx = (opcode >> 8u) & 0x0Fu;
-	uint8_t regy = (opcode >> 4u) & 0x00Fu;
-
-	if(registers[regx] != registers[regy]) {
-		pc+=2;
-	}
-}
-
 void CPU::instruct_6XNN(uint16_t opcode) {
 	uint8_t reg = ((opcode) >> 8u) & 0x0Fu;
 	uint8_t value = opcode & 0x00FFu;
@@ -152,6 +157,15 @@ void CPU::instruct_7XNN(uint16_t opcode) {
 	uint8_t value = opcode & 0x00FFu;
 
 	registers[reg] += value;
+}
+
+void CPU::instruct_9XY0(uint16_t opcode) {
+	uint8_t regx = (opcode >> 8u) & 0x0Fu;
+	uint8_t regy = (opcode >> 4u) & 0x00Fu;
+
+	if(registers[regx] != registers[regy]) {
+		pc+=2;
+	}
 }
 
 void CPU::instruct_ANNN(uint16_t opcode) {

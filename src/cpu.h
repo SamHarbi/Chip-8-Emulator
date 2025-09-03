@@ -5,7 +5,7 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
-#include <array>
+#include <stack>
 
 class CPU {
     public:
@@ -13,8 +13,7 @@ class CPU {
         uint8_t memory[4096]{};
         uint16_t index{};
         uint16_t pc{};
-        uint16_t stack[16]{};
-        uint8_t sp{};
+        std::stack<uint16_t> stack; // Max length should be 16
         uint8_t delayTimer{};
         uint8_t soundTimer{};
         uint8_t keypad[16]{};
@@ -50,7 +49,9 @@ class CPU {
         uint32_t* getDisplayData();
 
         void instruct_00E0();
+        void instruct_00EE(uint16_t opcode);
         void instruct_1NNN(uint16_t opcode);
+        void instruct_2NNN(uint16_t opcode);
         void instruct_6XNN(uint16_t opcode);
         void instruct_7XNN(uint16_t opcode);
         void instruct_ANNN(uint16_t opcode);
