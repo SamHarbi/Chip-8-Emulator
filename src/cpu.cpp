@@ -9,7 +9,7 @@ CPU::CPU(){
 
     srand(time(0));
 
-    loadROM("test/roms/octojam3title.ch8");
+    loadROM("test/roms/octojam1title.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
@@ -101,6 +101,10 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	else if (opcode >> 12u == 0xD) {
 		std::cout << "DXYN (display/draw)" << std::endl;
 		instruct_DXYN(opcode);
+	}
+	else if (opcode >> 12u == 0xF) {
+		std::cout << "0x8 | Series Instructions" << std::endl;
+		instruct_F(opcode);
 	}
 	else {
 		printf("Unknown opcode: %d \n", opcode);
@@ -289,4 +293,52 @@ void CPU::instruct_DXYN(uint16_t opcode) {
 			}
 		}
 	}
+}
+
+void CPU::instruct_F(uint16_t opcode) {
+	uint8_t lastNibbles = opcode & 0x00FFu;
+	if (lastNibbles == 07) {
+		std::cout << "0xF | 07 Timer" << std::endl;
+		instruct_FX07(opcode);
+	}
+	else if (lastNibbles == 15) {
+		std::cout << "0xF | 15 Timer" << std::endl;
+		instruct_FX15(opcode);
+	}
+	else if (lastNibbles == 18) {
+		std::cout << "0xF | 18 Timer" << std::endl;
+		instruct_FX18(opcode);
+	}
+	else if (lastNibbles == 0x1E) {
+		std::cout << "0xF | 1E Timer" << std::endl;
+		instruct_FX1E(opcode);
+	}
+}
+
+void CPU::instruct_FX07(uint16_t opcode) {
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	registers[Vx] = delayTimer;
+}
+
+void CPU::instruct_FX15(uint16_t opcode) {
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	delayTimer = registers[Vx];
+}
+
+void CPU::instruct_FX18(uint16_t opcode) {
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	soundTimer = registers[Vx];
+}
+
+void CPU::instruct_FX1E(uint16_t opcode) {
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+
+	// Not confirmed behaviour, need to be able to config this!
+	if( registers[Vx] > (255 - index) ) {
+		registers[15] = 1;
+	} else {
+		registers[15] = 0;
+	}
+
+	index += registers[Vx];
 }

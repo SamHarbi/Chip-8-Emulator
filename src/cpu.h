@@ -72,4 +72,10 @@ class CPU {
         void instruct_BNNN(uint16_t opcode);
         void instruct_CXNN(uint16_t opcode);
 
+        void instruct_F(uint16_t opcode);
+        void instruct_FX07(uint16_t opcode);
+        void instruct_FX15(uint16_t opcode);
+        void instruct_FX18(uint16_t opcode);
+        void instruct_FX1E(uint16_t opcode);
+
 };
