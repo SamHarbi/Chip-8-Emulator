@@ -50,6 +50,8 @@ class CPU {
 
         void instruct_00E0();
         void instruct_00EE(uint16_t opcode);
+        void instruct_0(uint16_t opcode);
+
         void instruct_1NNN(uint16_t opcode);
         void instruct_2NNN(uint16_t opcode);
         void instruct_6XNN(uint16_t opcode);
@@ -70,6 +72,7 @@ class CPU {
         void instruct_8XY5(uint16_t opcode);
         void instruct_8XY7(uint16_t opcode);
         void instruct_8XY6(uint16_t opcode);
+        void instruct_8XYE(uint16_t opcode);
 
         void instruct_BNNN(uint16_t opcode);
         void instruct_CXNN(uint16_t opcode);
@@ -79,5 +82,6 @@ class CPU {
         void instruct_FX15(uint16_t opcode);
         void instruct_FX18(uint16_t opcode);
         void instruct_FX1E(uint16_t opcode);
+        void instruct_FX29(uint16_t opcode);
 
 };

@@ -9,7 +9,7 @@ CPU::CPU(){
 
     srand(time(0));
 
-    loadROM("test/roms/test_opcode.ch8");
+    loadROM("test/roms/3-corax+.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
@@ -47,12 +47,10 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	opcode = (memory[pc] << 8u) | memory[pc + 1];
 	pc += 2;
 	//std::cout << std::format("{:x} {:#x} {}\n", opcode, (opcode) >> 12u, opcode);
-	if (opcode >> 12u == 0x00) {
-		//std::cout << "Ignored opcode 00" << std::endl;
-	}
-	else if (opcode >> 12u == 0xe0) {
-		std::cout << "00E0 (clear screen)" << std::endl;
-		instruct_00E0();
+
+	if (opcode >> 12u == 0x0) {
+		std::cout << "0x0 | Series Instructions" << std::endl;
+		instruct_0(opcode);
 	}
 	else if (opcode >> 12u == 0x1) {
 		std::cout << "1NNN (jump)" << std::endl;
@@ -112,13 +110,27 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	return std::chrono::steady_clock::now();
 }
 
+void CPU::instruct_0(uint16_t opcode) {
+	uint8_t byte = opcode & 0x00FF;
+	if (byte == 0xe0) {
+		std::cout << "00E0 (clear screen)" << std::endl;
+		instruct_00E0();
+	} 
+	else if (byte == 0xEE) {
+		std::cout << "00EE (Subroutine)" << std::endl;
+		instruct_00EE(opcode);
+	}
+}
+
 void CPU::instruct_00E0() {
     std::fill(std::begin(screen), std::end(screen), 0);
 }
 
 void CPU::instruct_00EE(uint16_t opcode) {
-	pc = stack.top();
-	stack.pop();
+	if(!stack.empty()) {
+		pc = stack.top();
+		stack.pop();
+	}
 }
 
 void CPU::instruct_1NNN(uint16_t opcode) {
@@ -346,6 +358,10 @@ void CPU::instruct_F(uint16_t opcode) {
 		std::cout << "0xF | 1E Timer" << std::endl;
 		instruct_FX1E(opcode);
 	}
+	else if (lastNibbles == 0x29) {
+		std::cout << "0xF | 29 Font character" << std::endl;
+		instruct_FX29(opcode);
+	}
 }
 
 void CPU::instruct_FX07(uint16_t opcode) {
@@ -374,4 +390,9 @@ void CPU::instruct_FX1E(uint16_t opcode) {
 	}
 
 	index += registers[Vx];
+}
+
+void CPU::instruct_FX29(uint16_t opcode) {
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	index = FONT_START_ADDRESS + (5 * registers[vx]);
 }
