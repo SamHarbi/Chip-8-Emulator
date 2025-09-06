@@ -9,7 +9,7 @@ CPU::CPU(){
 
     srand(time(0));
 
-    loadROM("test/roms/octojam1title.ch8");
+    loadROM("test/roms/test_opcode.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
@@ -195,12 +195,15 @@ void CPU::instruct_8(uint16_t opcode) {
 	}
 	else if (lastNibble == 5) {
 		std::cout << "0x8 | 5 Subtract VX" << std::endl;
+		instruct_8XY5(opcode);
 	}
 	else if (lastNibble == 6) {
 		std::cout << "0x8 | 6 Shift" << std::endl;
+		instruct_8XY6(opcode);
 	}
 	else if (lastNibble == 7) {
 		std::cout << "0x8 | 7 Subtract VY" << std::endl;
+		instruct_8XY7(opcode);
 	}
 }
 
@@ -245,8 +248,38 @@ void CPU::instruct_8XY4(uint16_t opcode) {
 	registers[vx] = registers[vx] + registers[vy];
 }
 
+void CPU::instruct_8XY5(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	if( registers[vx] > registers[vy] ) {
+		registers[15] = 1;
+	} else {
+		registers[15] = 0;
+	}
+
+	registers[vx] =- registers[vy];
+}
+
 void CPU::instruct_8XY6(uint16_t opcode) {
-	// TODO, two common differing behaviors
+	// Need to be able to configure for older different behaviour
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t valueShifted = registers[vx] & 1;
+
+	registers[vx] = registers[vx] >> 1u;
+}
+
+void CPU::instruct_8XY7(uint16_t opcode) {
+	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+
+	if( registers[vy] > registers[vx] ) {
+		registers[15] = 1;
+	} else {
+		registers[15] = 0;
+	}
+
+	registers[vy] =- registers[vx];
 }
 
 void CPU::instruct_9XY0(uint16_t opcode) {

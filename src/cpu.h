@@ -67,6 +67,8 @@ class CPU {
         void instruct_8XY2(uint16_t opcode);
         void instruct_8XY3(uint16_t opcode);
         void instruct_8XY4(uint16_t opcode);
+        void instruct_8XY5(uint16_t opcode);
+        void instruct_8XY7(uint16_t opcode);
         void instruct_8XY6(uint16_t opcode);
 
         void instruct_BNNN(uint16_t opcode);
