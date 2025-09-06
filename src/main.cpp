@@ -15,6 +15,9 @@ int main(void) {
     std::chrono::duration<float, std::chrono::milliseconds::period> dt = currentTime - last_clock;
     const std::chrono::duration<double> clock_delay{0.0};
 
+    // Renderer -> Creates Input (Since input is tied to a window which is renderer domain), CPU -> purely emulation,
+    // Main -> Orchestrate everything
+    // Input Obj passed into CPU, CPU polls keys independently from renderer thanks to this middle man obj.
     if(error == 0) {
         do {
             currentTime = std::chrono::steady_clock::now();

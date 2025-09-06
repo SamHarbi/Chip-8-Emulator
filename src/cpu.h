@@ -51,16 +51,16 @@ class CPU {
         void instruct_00E0();
         void instruct_00EE(uint16_t opcode);
         void instruct_0(uint16_t opcode);
+        /* 0NNN is being ignored since this is an emulator,
+        otherwise was used to call back to host machine */
 
         void instruct_1NNN(uint16_t opcode);
         void instruct_2NNN(uint16_t opcode);
-        void instruct_6XNN(uint16_t opcode);
-        void instruct_7XNN(uint16_t opcode);
-        void instruct_ANNN(uint16_t opcode);
-        void instruct_DXYN(uint16_t opcode);
         void instruct_3XNN(uint16_t opcode);
         void instruct_4XNN(uint16_t opcode);
         void instruct_5XY0(uint16_t opcode);
+        void instruct_6XNN(uint16_t opcode);
+        void instruct_7XNN(uint16_t opcode);
         void instruct_9XY0(uint16_t opcode);
 
         void instruct_8(uint16_t opcode);
@@ -70,12 +70,16 @@ class CPU {
         void instruct_8XY3(uint16_t opcode);
         void instruct_8XY4(uint16_t opcode);
         void instruct_8XY5(uint16_t opcode);
-        void instruct_8XY7(uint16_t opcode);
         void instruct_8XY6(uint16_t opcode);
+        void instruct_8XY7(uint16_t opcode);
         void instruct_8XYE(uint16_t opcode);
 
+        void instruct_ANNN(uint16_t opcode);
         void instruct_BNNN(uint16_t opcode);
         void instruct_CXNN(uint16_t opcode);
+        void instruct_DXYN(uint16_t opcode);
+        void instruct_EX9E(uint16_t opcode);
+        void instruct_EXA1(uint16_t opcode);
 
         void instruct_F(uint16_t opcode);
         void instruct_FX07(uint16_t opcode);

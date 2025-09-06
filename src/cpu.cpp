@@ -10,6 +10,7 @@ CPU::CPU(){
     srand(time(0));
 
     loadROM("test/roms/3-corax+.ch8");
+	//loadROM("test/roms/octojam1title.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
@@ -217,39 +218,43 @@ void CPU::instruct_8(uint16_t opcode) {
 		std::cout << "0x8 | 7 Subtract VY" << std::endl;
 		instruct_8XY7(opcode);
 	}
+	else if (lastNibble == 0xE) {
+		std::cout << "0x8 | 7 Subtract VY" << std::endl;
+		instruct_8XYE(opcode);
+	}
 }
 
 void CPU::instruct_8XY0(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	registers[vx] = registers[vy];
 }
 
 void CPU::instruct_8XY1(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	registers[vx] = registers[vx] | registers[vy];
 }
 
 void CPU::instruct_8XY2(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	registers[vx] = registers[vx] & registers[vy];
 }
 
 void CPU::instruct_8XY3(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	registers[vx] = registers[vx] ^ registers[vy];
 }
 
 void CPU::instruct_8XY4(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	if( registers[vx] > (255 - registers[vy]) ) {
 		registers[15] = 1;
@@ -261,8 +266,8 @@ void CPU::instruct_8XY4(uint16_t opcode) {
 }
 
 void CPU::instruct_8XY5(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	if( registers[vx] > registers[vy] ) {
 		registers[15] = 1;
@@ -270,20 +275,20 @@ void CPU::instruct_8XY5(uint16_t opcode) {
 		registers[15] = 0;
 	}
 
-	registers[vx] =- registers[vy];
+	registers[vx] -= registers[vy];
 }
 
 void CPU::instruct_8XY6(uint16_t opcode) {
 	// Need to be able to configure for older different behaviour
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
 	uint8_t valueShifted = registers[vx] & 1;
 
 	registers[vx] = registers[vx] >> 1u;
 }
 
 void CPU::instruct_8XY7(uint16_t opcode) {
-	uint8_t vx = (opcode >> 8u) & 0x0Fu;
-	uint8_t vy = (opcode >> 12u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
 	if( registers[vy] > registers[vx] ) {
 		registers[15] = 1;
@@ -291,14 +296,22 @@ void CPU::instruct_8XY7(uint16_t opcode) {
 		registers[15] = 0;
 	}
 
-	registers[vy] =- registers[vx];
+	registers[vx] = registers[vy] - registers[vx];
+}
+
+void CPU::instruct_8XYE(uint16_t opcode) {
+	// Need to be able to configure for older different behaviour
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t valueShifted = registers[vx] & 1;
+
+	registers[vx] = registers[vx] << 1u;
 }
 
 void CPU::instruct_9XY0(uint16_t opcode) {
-	uint8_t regx = (opcode >> 8u) & 0x0Fu;
-	uint8_t regy = (opcode >> 4u) & 0x00Fu;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vy = (opcode & 0x00F0u) >> 4u;
 
-	if(registers[regx] != registers[regy]) {
+	if(registers[vx] != registers[vy]) {
 		pc+=2;
 	}
 }
@@ -312,10 +325,10 @@ void CPU::instruct_BNNN(uint16_t opcode) {
 }
 
 void CPU::instruct_CXNN(uint16_t opcode) {
-	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
 	uint8_t byte = opcode & 0x00FFu;
 
-	registers[Vx] = pseudoRandomVal() & byte;
+	registers[vx] = pseudoRandomVal() & byte;
 }
 
 void CPU::instruct_DXYN(uint16_t opcode) {
@@ -338,6 +351,14 @@ void CPU::instruct_DXYN(uint16_t opcode) {
 			}
 		}
 	}
+}
+
+void CPU::instruct_EX9E(uint16_t opcode) {
+
+}
+
+void CPU::instruct_EXA1(uint16_t opcode) {
+	
 }
 
 void CPU::instruct_F(uint16_t opcode) {
@@ -365,31 +386,31 @@ void CPU::instruct_F(uint16_t opcode) {
 }
 
 void CPU::instruct_FX07(uint16_t opcode) {
-	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-	registers[Vx] = delayTimer;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	registers[vx] = delayTimer;
 }
 
 void CPU::instruct_FX15(uint16_t opcode) {
-	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-	delayTimer = registers[Vx];
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	delayTimer = registers[vx];
 }
 
 void CPU::instruct_FX18(uint16_t opcode) {
-	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-	soundTimer = registers[Vx];
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	soundTimer = registers[vx];
 }
 
 void CPU::instruct_FX1E(uint16_t opcode) {
-	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
 
 	// Not confirmed behaviour, need to be able to config this!
-	if( registers[Vx] > (255 - index) ) {
+	if( registers[vx] > (255 - index) ) {
 		registers[15] = 1;
 	} else {
 		registers[15] = 0;
 	}
 
-	index += registers[Vx];
+	index += registers[vx];
 }
 
 void CPU::instruct_FX29(uint16_t opcode) {
