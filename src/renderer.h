@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <memory>
 
 class Renderer {
 public:
@@ -9,6 +10,7 @@ public:
     int init();
     int render();
     void inputDisplayData(uint32_t *data);
+    void generateRandomTestData();
 
 private:
     unsigned int VBO;
@@ -37,8 +39,9 @@ private:
 
     void processInput(GLFWwindow *window);
     int readShaderFromFile(std::string &shader, std::string shaderFileName);
+    std::unique_ptr<std::vector<uint32_t, std::allocator<uint32_t>>> generateRandomTexture();
 
-    // Basic debug shaders in case we need em during dev
+    // Basic debug shaders in case we need em during dev, actual shaders are read during runtime from src/shaders
     const char *vertexShaderSource = "#version 330 core\n"
                                      "layout (location = 0) in vec3 aPos;\n"
                                      "void main()\n"

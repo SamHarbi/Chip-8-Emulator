@@ -9,5 +9,5 @@ GLFWInput::~GLFWInput() {
 }
 
 void GLFWInput::poll() {
-
+    glfwPollEvents();
 }

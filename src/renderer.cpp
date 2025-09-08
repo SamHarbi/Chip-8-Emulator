@@ -87,22 +87,6 @@ int Renderer::init(void) {
     glDeleteShader(fragmentShader);
 
     /*
-        Load in texture data, Random test data here. CPU will set using inputDisplayData 
-    */
-    int width, height, nrChannels;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<unsigned char> distrib(0, std::numeric_limits<unsigned char>::max());
-    std::vector<unsigned char> temp(6144);
-
-    for (int i = 0; i < 6144; ++i) {
-        temp[i] = distrib(gen);
-    }
-
-    unsigned char *data = temp.data();
-
-    /*
         Setup OpenGL
     */
 
@@ -139,6 +123,26 @@ int Renderer::init(void) {
     return 0;
 }
 
+void Renderer::generateRandomTestData() {
+    auto p = generateRandomTexture();
+    uint32_t *data = p.get()->data();
+    inputDisplayData(data);
+}
+
+std::unique_ptr<std::vector<uint32_t>> Renderer::generateRandomTexture() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<uint32_t> distrib(0, std::numeric_limits<uint32_t>::max());
+    auto data = std::vector<uint32_t>(6144);
+
+    for (int i = 0; i < 6144; ++i) {
+        data[i] = distrib(gen);
+    }
+
+    // Uses move semantics and clears after itself via smart_ptr
+    return std::make_unique<std::vector<uint32_t>>(data);
+}
+
 void Renderer::processInput(GLFWwindow *local_window) {
     if (glfwGetKey(local_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(local_window, true);
@@ -147,7 +151,7 @@ void Renderer::processInput(GLFWwindow *local_window) {
 int Renderer::readShaderFromFile(std::string &shader, std::string shaderFileName) {
     std::ifstream file(shaderFileName);
     if (!file.is_open()) {
-        std::cerr << "Couldn't load vertex shader" << std::endl;
+        std::cerr << "Couldn't load shader" << std::endl;
         return 1;
     }
 
