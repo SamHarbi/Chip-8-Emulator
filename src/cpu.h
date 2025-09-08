@@ -87,5 +87,7 @@ class CPU {
         void instruct_FX18(uint16_t opcode);
         void instruct_FX1E(uint16_t opcode);
         void instruct_FX29(uint16_t opcode);
+        void instruct_FX55(uint16_t opcode);
+        void instruct_FX65(uint16_t opcode);
 
 };

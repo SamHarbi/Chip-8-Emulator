@@ -102,7 +102,7 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 		instruct_DXYN(opcode);
 	}
 	else if (opcode >> 12u == 0xF) {
-		std::cout << "0x8 | Series Instructions" << std::endl;
+		std::cout << "0xF | Series Instructions" << std::endl;
 		instruct_F(opcode);
 	}
 	else {
@@ -383,6 +383,14 @@ void CPU::instruct_F(uint16_t opcode) {
 		std::cout << "0xF | 29 Font character" << std::endl;
 		instruct_FX29(opcode);
 	}
+	else if (lastNibbles == 0x55) {
+		std::cout << "0xF | 55 Store Memory" << std::endl;
+		instruct_FX55(opcode);
+	}
+	else if (lastNibbles == 0x65) {
+		std::cout << "0xF | 65 Load Memory" << std::endl;
+		instruct_FX65(opcode);
+	}
 }
 
 void CPU::instruct_FX07(uint16_t opcode) {
@@ -417,3 +425,19 @@ void CPU::instruct_FX29(uint16_t opcode) {
 	uint8_t vx = (opcode & 0x0F00u) >> 8u;
 	index = FONT_START_ADDRESS + (5 * registers[vx]);
 }
+
+// -- These need to have configuration to choose between i and i++ behaviour
+void CPU::instruct_FX55(uint16_t opcode) {
+	uint8_t max = (opcode & 0x0F00u) >> 8u;
+	for(int i=0; i<=max; i++) {
+		memory[index+i] = registers[i];
+	}
+}
+
+void CPU::instruct_FX65(uint16_t opcode) {
+	uint8_t max = (opcode & 0x0F00u) >> 8u;
+	for(int i=0; i<=max; i++) {
+		registers[i] = memory[index+i];
+	}
+}
+// -- 
