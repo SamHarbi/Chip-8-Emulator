@@ -9,7 +9,7 @@ CPU::CPU(){
 
     srand(time(0));
 
-    loadROM("test/roms/3-corax+.ch8");
+    loadROM("test/roms/4-flags.ch8");
 	//loadROM("test/roms/octojam1title.ch8");
 }
 

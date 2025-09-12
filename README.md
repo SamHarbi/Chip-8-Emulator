@@ -13,3 +13,6 @@ cmake for compiliation. Requires a system running NixOS or the Nix Package manag
 ### Corax+ Extended Opcode Test | [Chip-8 test suite](https://github.com/Timendus/chip8-test-suite)
 ![Corax+ Opcode Test Result](/assets/corax+.png "Corax+ Opcode Test")
 
+### Flags Test | [Chip-8 test suite](https://github.com/Timendus/chip8-test-suite)
+![Flags Test Result](/assets/flags.png "Flags Test")
+
