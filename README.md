@@ -9,5 +9,7 @@ only acts as an excuse for any esoteric choices.
 cmake for compiliation. Requires a system running NixOS or the Nix Package manager installed. Similar to Docker but without the overhead of a whole filesystem.
 - Seperate Renderer made with OpenGL (GLEW & GLFW). Every "frame" rendered by the emulator is displayed as a texture.
 
-<img width="640" height="342" alt="image" src="https://github.com/user-attachments/assets/ef8edf75-f3c8-4076-bfb2-91e30e81b4d9" />
+## Emulator Compliance
+### Corax+ Extended Opcode Test | [Chip-8 test suite](https://github.com/Timendus/chip8-test-suite)
+![Corax+ Opcode Test Result](/assets/corax+.png "Corax+ Opcode Test")
 

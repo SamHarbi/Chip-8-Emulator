@@ -383,6 +383,10 @@ void CPU::instruct_F(uint16_t opcode) {
 		std::cout << "0xF | 29 Font character" << std::endl;
 		instruct_FX29(opcode);
 	}
+	else if (lastNibbles == 0x33) {
+		std::cout << "0xF | 33 Decimal conversion" << std::endl;
+		instruct_FX33(opcode);
+	}
 	else if (lastNibbles == 0x55) {
 		std::cout << "0xF | 55 Store Memory" << std::endl;
 		instruct_FX55(opcode);
@@ -424,6 +428,13 @@ void CPU::instruct_FX1E(uint16_t opcode) {
 void CPU::instruct_FX29(uint16_t opcode) {
 	uint8_t vx = (opcode & 0x0F00u) >> 8u;
 	index = FONT_START_ADDRESS + (5 * registers[vx]);
+}
+
+void CPU::instruct_FX33(uint16_t opcode) {
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	memory[index] = (int)(registers[vx] / 100);
+	memory[index+1] = (int)(registers[vx] / 10) % 10;
+	memory[index+2] = (int)(registers[vx] % 10);
 }
 
 // -- These need to have configuration to choose between i and i++ behaviour
