@@ -2,10 +2,10 @@
 ## About
 My attempt at writing a Chip8 Emulator. This is mainly a learning exercise / experimental ground
 for architecting a modern C++ codebases- But this is still a working emulator first and foremost. The former
-only acts as an excuse for any esoteric choices.
-## Design
-- Modern C++23, Built with CMake.
-- Development enviroment and dynamic dependencies declaratively defined via the [Nix Flake](https://wiki.nixos.org/wiki/Flakes) system. Creates the exact dev enviroment needed by
+only acts as an excuse for any excess choices. At a glance those are as follows:
+
+- Targeting Modern C++23, Built with CMake.
+- Dynamic dependencies declaratively defined via the [Nix Flake](https://wiki.nixos.org/wiki/Flakes) system. Creates the exact dev environment needed by
 cmake for compiliation. Requires a system running NixOS or the Nix Package manager installed. Similar to Docker but without the overhead of a whole filesystem.
 - Seperate Renderer made with OpenGL (GLEW & GLFW). Every "frame" rendered by the emulator is displayed as a texture.
 

@@ -1,3 +1,4 @@
+#pragma once
 // Abstract Class. Decouple input (based on api used for window/renderer) from the cpu
 class IInput {
     public:

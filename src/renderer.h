@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
+#include "glfwinput.h"
 
 class Renderer {
 public:
@@ -19,6 +20,7 @@ private:
     unsigned int program;
     unsigned int texture;
     GLFWwindow *window;
+    GLFWInput *input;
 
     // Draw a quad covering the whole screen
     float vertices[32] = { // Position 3 floats - Color 3 FLoats - Texture 2 Floats

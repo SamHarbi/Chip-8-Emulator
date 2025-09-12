@@ -15,6 +15,8 @@ Renderer::Renderer() {}
 Renderer::~Renderer() {
     // Doc's say it's fine to call before init, which implies it's safe to call multiple times
     glfwTerminate();
+
+    delete input;
 }
 
 int Renderer::init(void) {
@@ -117,8 +119,8 @@ int Renderer::init(void) {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-
-    //stbi_image_free(data);
+    input = new GLFWInput();
+    input->InputInit(window);
 
     return 0;
 }
@@ -181,6 +183,7 @@ void Renderer::inputDisplayData(uint32_t *data) {
 int Renderer::render() {
     if (!glfwWindowShouldClose(Renderer::window)) {
         processInput(Renderer::window);
+        input->poll();
 
         // Bind needed data
         glUseProgram(program);
