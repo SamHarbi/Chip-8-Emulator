@@ -119,8 +119,7 @@ int Renderer::init(void) {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    input = new GLFWInput();
-    input->InputInit(window);
+    input = new GLFWInput(window);
 
     return 0;
 }
@@ -146,8 +145,9 @@ std::unique_ptr<std::vector<uint32_t>> Renderer::generateRandomTexture() {
 }
 
 void Renderer::processInput(GLFWwindow *local_window) {
-    if (glfwGetKey(local_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if(input->queryKey("ESC")) {
         glfwSetWindowShouldClose(local_window, true);
+    }
 }
 
 int Renderer::readShaderFromFile(std::string &shader, std::string shaderFileName) {

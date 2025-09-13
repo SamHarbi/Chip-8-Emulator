@@ -10,10 +10,9 @@ class GLFWInput: public IInput {
         GLFWwindow *window;
 
     public:
-        GLFWInput();
+        GLFWInput(GLFWwindow* initwindow);
         ~GLFWInput();
 
-        void InputInit(GLFWwindow* initwindow);
-
         void poll(); // Populate class members
+        bool queryKey(std::string name);
 };
