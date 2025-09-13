@@ -1,11 +1,13 @@
 #include "cpu.h"
 
-CPU::CPU(){
+CPU::CPU(IInput* managedInput){
     pc = START_ADDRESS;
 
 	for (unsigned int i = 0; i < 80; ++i) {
 		memory[FONT_START_ADDRESS + i] = font[i];
 	}
+
+	input = managedInput;
 
     srand(time(0));
 
@@ -48,6 +50,10 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	opcode = (memory[pc] << 8u) | memory[pc + 1];
 	pc += 2;
 	//std::cout << std::format("{:x} {:#x} {}\n", opcode, (opcode) >> 12u, opcode);
+
+	if(input->queryKey("0")) {
+		std::cout << "INPUT RECEIVED 0 IN CPU" << std::endl;
+	}
 
 	if (opcode >> 12u == 0x0) {
 		std::cout << "0x0 | Series Instructions" << std::endl;
@@ -395,6 +401,10 @@ void CPU::instruct_F(uint16_t opcode) {
 		std::cout << "0xF | 65 Load Memory" << std::endl;
 		instruct_FX65(opcode);
 	}
+	else if (lastNibbles == 0x0A) {
+		std::cout << "0xF | 0A Get Key" << std::endl;
+		instruct_FX0A(opcode);
+	}
 }
 
 void CPU::instruct_FX07(uint16_t opcode) {
@@ -451,4 +461,10 @@ void CPU::instruct_FX65(uint16_t opcode) {
 		registers[i] = memory[index+i];
 	}
 }
-// -- 
+// --
+
+void CPU::instruct_FX0A(uint16_t opcode) {
+	if(input->queryKey("0")) {
+		std::cout << "INPUT RECEIVED 0 IN CPU" << std::endl;
+	}
+}

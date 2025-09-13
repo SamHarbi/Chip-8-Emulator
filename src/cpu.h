@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <stack>
 
+#include "input.h"
+
 class CPU {
     public:
         uint8_t registers[16]{};
@@ -19,6 +21,8 @@ class CPU {
         uint8_t keypad[16]{};
         uint32_t screen[64 * 32]{};
         uint16_t opcode;
+
+        IInput* input;
 
         const unsigned int START_ADDRESS = 0x200;
         const unsigned int FONT_START_ADDRESS = 0x50;
@@ -42,7 +46,7 @@ class CPU {
             0xF0, 0x80, 0xF0, 0x80, 0x80  // F
         };
 
-        CPU();
+        CPU(IInput* managedInput);
         void loadROM(std::string filename);
         unsigned char pseudoRandomVal();
         std::chrono::time_point<std::chrono::steady_clock> cycle();
@@ -90,5 +94,6 @@ class CPU {
         void instruct_FX33(uint16_t opcode);
         void instruct_FX55(uint16_t opcode);
         void instruct_FX65(uint16_t opcode);
+        void instruct_FX0A(uint16_t opcode);
 
 };

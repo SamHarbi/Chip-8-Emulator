@@ -5,7 +5,8 @@
 class IInput {
     public:
         ~IInput() {};
-        virtual void poll() = 0; // Populate class members
+        virtual void poll() {}; // Populate class members
+        virtual bool queryKey(std::string name) {return false;};
 
     protected:
         // String because labels such as "ESC" Are likely to be implemented

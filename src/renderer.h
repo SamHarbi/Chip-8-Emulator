@@ -13,6 +13,8 @@ public:
     void inputDisplayData(uint32_t *data);
     void generateRandomTestData();
 
+    GLFWInput *input;
+
 private:
     unsigned int VBO;
     unsigned int VAO; // Going to use a single VAO here, don't expect the need for multiple atm
@@ -20,7 +22,6 @@ private:
     unsigned int program;
     unsigned int texture;
     GLFWwindow *window;
-    GLFWInput *input;
 
     // Draw a quad covering the whole screen
     float vertices[32] = { // Position 3 floats - Color 3 FLoats - Texture 2 Floats

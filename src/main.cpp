@@ -5,9 +5,11 @@
 #include "cpu.h"
 
 int main(void) {
-    CPU* cpu = new CPU();
     Renderer* rend = new Renderer();
     int error = rend->init();
+
+    // This can all be done a lot better and safer, TODO
+    CPU* cpu = new CPU(rend->input);
 
     // Clock values to control speed of emulation
     std::chrono::time_point<std::chrono::steady_clock> last_clock = std::chrono::steady_clock::now();
@@ -31,5 +33,7 @@ int main(void) {
         } while ( error == 0);
     }
 
+    delete cpu;
+    delete rend;
     return 0;
 }
