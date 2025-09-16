@@ -13,7 +13,9 @@ CPU::CPU(IInput* managedInput){
 
     //loadROM("test/roms/6-keypad.ch8");
 	//loadROM("test/roms/octojam1title.ch8");
-	loadROM("test/roms/octojam2title.ch8");
+	//loadROM("test/roms/octojam2title.ch8");
+	//loadROM("test/roms/IBM_Logo.ch8");
+	loadROM("test/roms/3-corax+.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
