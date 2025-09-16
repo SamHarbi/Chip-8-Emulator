@@ -82,6 +82,8 @@ class CPU {
         void instruct_BNNN(uint16_t opcode);
         void instruct_CXNN(uint16_t opcode);
         void instruct_DXYN(uint16_t opcode);
+
+        void instruct_E(uint16_t opcode);
         void instruct_EX9E(uint16_t opcode);
         void instruct_EXA1(uint16_t opcode);
 

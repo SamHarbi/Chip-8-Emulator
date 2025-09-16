@@ -24,9 +24,11 @@ int main(void) {
         do {
             currentTime = std::chrono::steady_clock::now();
 		    dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - last_clock);
+            rend->input->poll();
 		    if( dt > clock_delay ) {
-			    last_clock = cpu->cycle();
+                //std::cout << dt << std::endl;
                 rend->inputDisplayData(cpu->getDisplayData());
+                last_clock = cpu->cycle();
                 error = rend->render();
 		    }
             

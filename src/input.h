@@ -6,26 +6,26 @@ class IInput {
     public:
         ~IInput() {};
         virtual void poll() {}; // Populate class members
-        virtual bool queryKey(std::string name) {return false;};
+        virtual bool queryKey(uint8_t name) {return false;};
+        virtual bool isAnyKeyPressed(uint8_t &keyThatIsPressed) {return false;};
 
     protected:
-        // String because labels such as "ESC" Are likely to be implemented
-        std::map<std::string, bool> keys {
-            {"0", false},
-            {"1", false},
-            {"2", false},
-            {"3", false},
-            {"4", false},
-            {"5", false},
-            {"6", false},
-            {"7", false},
-            {"8", false},
-            {"9", false},
-            {"A", false},
-            {"B", false},
-            {"C", false},
-            {"D", false},
-            {"E", false},
-            {"F", false},
+        std::map<uint8_t, bool> keys {
+            {0x0, false},
+            {0x1, false},
+            {0x2, false},
+            {0x3, false},
+            {0x4, false},
+            {0x5, false},
+            {0x6, false},
+            {0x7, false},
+            {0x8, false},
+            {0x9, false},
+            {0xA, false},
+            {0xB, false},
+            {0xC, false},
+            {0xD, false},
+            {0xE, false},
+            {0xF, false},
         };
 };

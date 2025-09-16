@@ -145,9 +145,9 @@ std::unique_ptr<std::vector<uint32_t>> Renderer::generateRandomTexture() {
 }
 
 void Renderer::processInput(GLFWwindow *local_window) {
-    if(input->queryKey("ESC")) {
-        glfwSetWindowShouldClose(local_window, true);
-    }
+    //if(input->queryKey("ESC")) {
+    //    glfwSetWindowShouldClose(local_window, true);
+    //}
 }
 
 int Renderer::readShaderFromFile(std::string &shader, std::string shaderFileName) {
@@ -182,7 +182,7 @@ void Renderer::inputDisplayData(uint32_t *data) {
 // Render loop, to be ran everytime the scene updates
 int Renderer::render() {
     if (!glfwWindowShouldClose(Renderer::window)) {
-        processInput(Renderer::window);
+        //processInput(Renderer::window);
         input->poll();
 
         // Bind needed data

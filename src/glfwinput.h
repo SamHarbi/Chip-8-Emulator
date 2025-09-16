@@ -14,5 +14,6 @@ class GLFWInput: public IInput {
         ~GLFWInput();
 
         void poll(); // Populate class members
-        bool queryKey(std::string name);
+        bool queryKey(uint8_t name);
+        bool isAnyKeyPressed(uint8_t &keyThatIsPressed);
 };

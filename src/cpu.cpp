@@ -11,8 +11,9 @@ CPU::CPU(IInput* managedInput){
 
     srand(time(0));
 
-    loadROM("test/roms/3-corax+.ch8");
+    //loadROM("test/roms/6-keypad.ch8");
 	//loadROM("test/roms/octojam1title.ch8");
+	loadROM("test/roms/octojam2title.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
@@ -24,7 +25,7 @@ void CPU::loadROM(std::string filename) {
     std::ifstream file(filename_ptr, std::ios::binary | std::ios::ate);
 
     if(file.is_open()) {
-		std::cout<<"Opened file"<<std::endl;
+		//std::cout<<"Opened file"<<std::endl;
 		std::streampos size = file.tellg();
 		char* buffer = new char[size];
 
@@ -49,66 +50,70 @@ uint32_t* CPU::getDisplayData() {
 std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	opcode = (memory[pc] << 8u) | memory[pc + 1];
 	pc += 2;
-	//std::cout << std::format("{:x} {:#x} {}\n", opcode, (opcode) >> 12u, opcode);
+	////std::cout << std::format("{:x} {:#x} {}\n", opcode, (opcode) >> 12u, opcode);
 
-	if(input->queryKey("0")) {
-		std::cout << "INPUT RECEIVED 0 IN CPU" << std::endl;
+	if(input->queryKey(0)) {
+		//std::cout << "INPUT RECEIVED 0 IN CPU" << std::endl;
 	}
 
 	if (opcode >> 12u == 0x0) {
-		std::cout << "0x0 | Series Instructions" << std::endl;
+		//std::cout << "0x0 | Series Instructions" << std::endl;
 		instruct_0(opcode);
 	}
 	else if (opcode >> 12u == 0x1) {
-		std::cout << "1NNN (jump)" << std::endl;
+		//std::cout << "1NNN (jump)" << std::endl;
 		instruct_1NNN(opcode);
 	}
 	else if (opcode >> 12u == 0x2) {
-		std::cout << "2NNN (jump)" << std::endl;
+		//std::cout << "2NNN (jump)" << std::endl;
 		instruct_2NNN(opcode);
 	}
 	else if (opcode >> 12u == 0x3) {
-		std::cout << "3XNN (Skip conditionally)" << std::endl;
+		//std::cout << "3XNN (Skip conditionally)" << std::endl;
 		instruct_3XNN(opcode);
 	}
 	else if (opcode >> 12u == 0x4) {
-		std::cout << "4XNN (Skip conditionally)" << std::endl;
+		//std::cout << "4XNN (Skip conditionally)" << std::endl;
 		instruct_4XNN(opcode);
 	}
-	else if (opcode >> 12u == 0x4) {
-		std::cout << "5XY0 (Skip conditionally)" << std::endl;
+	else if (opcode >> 12u == 0x5) {
+		//std::cout << "5XY0 (Skip conditionally)" << std::endl;
 		instruct_5XY0(opcode);
 	}
-	else if (opcode >> 12u == 0x4) {
-		std::cout << "9XY0 (Skip conditionally)" << std::endl;
+	else if (opcode >> 12u == 0x9) {
+		//std::cout << "9XY0 (Skip conditionally)" << std::endl;
 		instruct_9XY0(opcode);
 	}
 	else if (opcode >> 12u == 0x6) {
-		std::cout << "6XNN (set register VX)" << std::endl;
+		//std::cout << "6XNN (set register VX)" << std::endl;
 		instruct_6XNN(opcode);
 	}
 	else if (opcode >> 12u == 0x7) {
-		std::cout << "7XNN (add value to register VX)" << std::endl;
+		//std::cout << "7XNN (add value to register VX)" << std::endl;
 		instruct_7XNN(opcode);
 	}
 	else if (opcode >> 12u == 0x8) {
-		std::cout << "0x8 | Series Instructions" << std::endl;
+		//std::cout << "0x8 | Series Instructions" << std::endl;
 		instruct_8(opcode);
 	}
 	else if (opcode >> 12u == 0xA) {
-		std::cout << "ANNN (set index register I)" << std::endl;
+		//std::cout << "ANNN (set index register I)" << std::endl;
 		instruct_ANNN(opcode);
 	}
-	else if (opcode >> 12u == 0xA) {
-		std::cout << "CXNN (random)" << std::endl;
+	else if (opcode >> 12u == 0xC) {
+		//std::cout << "CXNN (random)" << std::endl;
 		instruct_CXNN(opcode);
 	}
 	else if (opcode >> 12u == 0xD) {
-		std::cout << "DXYN (display/draw)" << std::endl;
+		//std::cout << "DXYN (display/draw)" << std::endl;
 		instruct_DXYN(opcode);
 	}
+	else if (opcode >> 12u == 0xE) {
+		//std::cout << "0xF | Series Instructions" << std::endl;
+		instruct_E(opcode);
+	}
 	else if (opcode >> 12u == 0xF) {
-		std::cout << "0xF | Series Instructions" << std::endl;
+		//std::cout << "0xF | Series Instructions" << std::endl;
 		instruct_F(opcode);
 	}
 	else {
@@ -120,11 +125,11 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 void CPU::instruct_0(uint16_t opcode) {
 	uint8_t byte = opcode & 0x00FF;
 	if (byte == 0xe0) {
-		std::cout << "00E0 (clear screen)" << std::endl;
+		//std::cout << "00E0 (clear screen)" << std::endl;
 		instruct_00E0();
 	} 
 	else if (byte == 0xEE) {
-		std::cout << "00EE (Subroutine)" << std::endl;
+		//std::cout << "00EE (Subroutine)" << std::endl;
 		instruct_00EE(opcode);
 	}
 }
@@ -193,39 +198,39 @@ void CPU::instruct_7XNN(uint16_t opcode) {
 void CPU::instruct_8(uint16_t opcode) {
 	uint8_t lastNibble = opcode & 0x000Fu;
 	if (lastNibble == 0) {
-		std::cout << "0x8 | 0 Set" << std::endl;
+		//std::cout << "0x8 | 0 Set" << std::endl;
 		instruct_8XY0(opcode);
 	}
 	else if (lastNibble == 1) {
-		std::cout << "0x8 | 1 Binary OR" << std::endl;
+		//std::cout << "0x8 | 1 Binary OR" << std::endl;
 		instruct_8XY1(opcode);
 	}
 	else if (lastNibble == 2) {
-		std::cout << "0x8 | 2 Binary AND" << std::endl;
+		//std::cout << "0x8 | 2 Binary AND" << std::endl;
 		instruct_8XY2(opcode);
 	}
 	else if (lastNibble == 3) {
-		std::cout << "0x8 | 3 Logical XOR" << std::endl;
+		//std::cout << "0x8 | 3 Logical XOR" << std::endl;
 		instruct_8XY3(opcode);
 	}
 	else if (lastNibble == 4) {
-		std::cout << "0x8 | 4 Add" << std::endl;
+		//std::cout << "0x8 | 4 Add" << std::endl;
 		instruct_8XY4(opcode);
 	}
 	else if (lastNibble == 5) {
-		std::cout << "0x8 | 5 Subtract VX" << std::endl;
+		//std::cout << "0x8 | 5 Subtract VX" << std::endl;
 		instruct_8XY5(opcode);
 	}
 	else if (lastNibble == 6) {
-		std::cout << "0x8 | 6 Shift" << std::endl;
+		//std::cout << "0x8 | 6 Shift" << std::endl;
 		instruct_8XY6(opcode);
 	}
 	else if (lastNibble == 7) {
-		std::cout << "0x8 | 7 Subtract VY" << std::endl;
+		//std::cout << "0x8 | 7 Subtract VY" << std::endl;
 		instruct_8XY7(opcode);
 	}
 	else if (lastNibble == 0xE) {
-		std::cout << "0x8 | 7 Subtract VY" << std::endl;
+		//std::cout << "0x8 | 7 Subtract VY" << std::endl;
 		instruct_8XYE(opcode);
 	}
 }
@@ -359,50 +364,72 @@ void CPU::instruct_DXYN(uint16_t opcode) {
 	}
 }
 
-void CPU::instruct_EX9E(uint16_t opcode) {
+void CPU::instruct_E(uint16_t opcode) {
+	uint8_t lastNibbles = opcode & 0x00FFu;
+	if (lastNibbles == 0x9E) {
+		//std::cout << "0xE | 9E Skip if key" << std::endl;
+		instruct_EX9E(opcode);
+	}
+	else if (lastNibbles == 0xA1) {
+		//std::cout << "0xE | A1 Skip if key" << std::endl;
+		instruct_EXA1(opcode);
+	}
+}
 
+void CPU::instruct_EX9E(uint16_t opcode) {
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t key = registers[vx];
+
+	if(input->queryKey(key)) {
+		pc+=2;
+	}
 }
 
 void CPU::instruct_EXA1(uint16_t opcode) {
-	
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t key = registers[vx];
+
+	if(!input->queryKey(key)) {
+		pc+=2;
+	}
 }
 
 void CPU::instruct_F(uint16_t opcode) {
 	uint8_t lastNibbles = opcode & 0x00FFu;
 	if (lastNibbles == 07) {
-		std::cout << "0xF | 07 Timer" << std::endl;
+		//std::cout << "0xF | 07 Timer" << std::endl;
 		instruct_FX07(opcode);
 	}
 	else if (lastNibbles == 15) {
-		std::cout << "0xF | 15 Timer" << std::endl;
+		//std::cout << "0xF | 15 Timer" << std::endl;
 		instruct_FX15(opcode);
 	}
 	else if (lastNibbles == 18) {
-		std::cout << "0xF | 18 Timer" << std::endl;
+		//std::cout << "0xF | 18 Timer" << std::endl;
 		instruct_FX18(opcode);
 	}
 	else if (lastNibbles == 0x1E) {
-		std::cout << "0xF | 1E Timer" << std::endl;
+		//std::cout << "0xF | 1E Timer" << std::endl;
 		instruct_FX1E(opcode);
 	}
 	else if (lastNibbles == 0x29) {
-		std::cout << "0xF | 29 Font character" << std::endl;
+		//std::cout << "0xF | 29 Font character" << std::endl;
 		instruct_FX29(opcode);
 	}
 	else if (lastNibbles == 0x33) {
-		std::cout << "0xF | 33 Decimal conversion" << std::endl;
+		//std::cout << "0xF | 33 Decimal conversion" << std::endl;
 		instruct_FX33(opcode);
 	}
 	else if (lastNibbles == 0x55) {
-		std::cout << "0xF | 55 Store Memory" << std::endl;
+		//std::cout << "0xF | 55 Store Memory" << std::endl;
 		instruct_FX55(opcode);
 	}
 	else if (lastNibbles == 0x65) {
-		std::cout << "0xF | 65 Load Memory" << std::endl;
+		//std::cout << "0xF | 65 Load Memory" << std::endl;
 		instruct_FX65(opcode);
 	}
 	else if (lastNibbles == 0x0A) {
-		std::cout << "0xF | 0A Get Key" << std::endl;
+		//std::cout << "0xF | 0A Get Key" << std::endl;
 		instruct_FX0A(opcode);
 	}
 }
@@ -464,7 +491,12 @@ void CPU::instruct_FX65(uint16_t opcode) {
 // --
 
 void CPU::instruct_FX0A(uint16_t opcode) {
-	if(input->queryKey("0")) {
-		std::cout << "INPUT RECEIVED 0 IN CPU" << std::endl;
+	uint8_t vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t key = 0;
+
+	if(input->isAnyKeyPressed(key)) {
+		registers[vx] = key;
+	} else {
+		pc-=2;
 	}
 }
