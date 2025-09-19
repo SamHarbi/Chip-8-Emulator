@@ -17,3 +17,12 @@ cmake for compilation. Requires a system running NixOS or the Nix Package manage
 ### Flags Test | [Chip-8 test suite](https://github.com/Timendus/chip8-test-suite)
 ![Flags Test Result](/assets/flags.png "Flags Test")
 
+## Usage
+Binary is a CLI program and takes in a single argument, release contains a compiled binary for linux systems.
+The argument is a path to the .ch8 file you would like to emulate. some CC0 and MIT roms are available in this repo for convenience.
+``` Bash
+./Chip8Emulator assets/roms/cc0/flightrunner.ch8
+```
+
+## Building Instructions
+Easiest way is to use the nix flake on a NixOS system or a system running the Nix Package manager. Otherwise, standard C++ and cmake conventions work as expected use `cmake --build .` while inside the checkout with all dependencies (can check the flake for this) installed.
