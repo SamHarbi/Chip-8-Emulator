@@ -40,7 +40,6 @@ private:
         1.0f, 0.0f,
         1.0f, 1.0f};
 
-    void processInput(GLFWwindow *window);
     int readShaderFromFile(std::string &shader, std::string shaderFileName);
     std::unique_ptr<std::vector<uint32_t, std::allocator<uint32_t>>> generateRandomTexture();
 

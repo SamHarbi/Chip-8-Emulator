@@ -5,9 +5,6 @@
 #include <vector>
 #include <random>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../include/stb_image.h"
-
 #include "renderer.h"
 
 Renderer::Renderer() {}
@@ -144,12 +141,6 @@ std::unique_ptr<std::vector<uint32_t>> Renderer::generateRandomTexture() {
     return std::make_unique<std::vector<uint32_t>>(data);
 }
 
-void Renderer::processInput(GLFWwindow *local_window) {
-    //if(input->queryKey("ESC")) {
-    //    glfwSetWindowShouldClose(local_window, true);
-    //}
-}
-
 int Renderer::readShaderFromFile(std::string &shader, std::string shaderFileName) {
     std::ifstream file(shaderFileName);
     if (!file.is_open()) {
@@ -182,7 +173,6 @@ void Renderer::inputDisplayData(uint32_t *data) {
 // Render loop, to be ran everytime the scene updates
 int Renderer::render() {
     if (!glfwWindowShouldClose(Renderer::window)) {
-        //processInput(Renderer::window);
         input->poll();
 
         // Bind needed data

@@ -10,12 +10,8 @@ CPU::CPU(IInput* managedInput){
 	input = managedInput;
 
     srand(time(0));
-
-    //loadROM("test/roms/6-keypad.ch8");
+	
 	//loadROM("test/roms/octojam1title.ch8");
-	//loadROM("test/roms/octojam2title.ch8");
-	//loadROM("test/roms/IBM_Logo.ch8");
-	loadROM("test/roms/3-corax+.ch8");
 }
 
 unsigned char CPU::pseudoRandomVal() {
@@ -109,6 +105,7 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	else if (opcode >> 12u == 0xD) {
 		//std::cout << "DXYN (display/draw)" << std::endl;
 		instruct_DXYN(opcode);
+		updateRenderer = true;
 	}
 	else if (opcode >> 12u == 0xE) {
 		//std::cout << "0xF | Series Instructions" << std::endl;
@@ -121,6 +118,7 @@ std::chrono::time_point<std::chrono::steady_clock> CPU::cycle() {
 	else {
 		printf("Unknown opcode: %d \n", opcode);
 	}
+	
 	return std::chrono::steady_clock::now();
 }
 

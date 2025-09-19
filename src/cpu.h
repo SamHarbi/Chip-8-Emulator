@@ -17,7 +17,7 @@ class CPU {
         uint16_t pc{};
         std::stack<uint16_t> stack; // Max length should be 16
         uint8_t delayTimer{};
-        uint8_t soundTimer{};
+        uint8_t soundTimer{}; // Doesn't actually play sound, a future todo
         uint8_t keypad[16]{};
         uint32_t screen[64 * 32]{};
         uint16_t opcode;
@@ -26,6 +26,9 @@ class CPU {
 
         const unsigned int START_ADDRESS = 0x200;
         const unsigned int FONT_START_ADDRESS = 0x50;
+
+        // Not the best way to do this, a TODO for the future
+        bool updateRenderer;
 
         uint8_t font[80] = {
             0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
